@@ -2,4 +2,7 @@
 tw2*
 *.swp
 htmlcov/htmlcov*
+htmlcov/results*
 htmlcov/index.html
+_run-tests.sh
+htmlcov/summary.data
