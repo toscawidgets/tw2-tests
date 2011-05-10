@@ -6,3 +6,4 @@ htmlcov/results*
 htmlcov/index.html
 _run-tests.sh
 htmlcov/summary.data
+build

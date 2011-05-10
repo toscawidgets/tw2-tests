@@ -125,7 +125,6 @@ class Repo(object):
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
             "cd -",
-            "notify-send '%s' \"$COV\"" % repr(self),
             "echo \"%s $COV\" >> htmlcov/summary.data" % repr(self),
         ]
         return " ;\n".join(commands)
