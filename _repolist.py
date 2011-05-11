@@ -9,50 +9,71 @@ NONE = '__none__'
 
 bitbucket_repos = {
     # THIS IS UNBEARABLE.  TODO -- change to tw2.core
-    'tw2dynforms' : 'paj',
-    'tw2core' : 'ralphbean',
-    'tw2.forms' : 'ralphbean',
-    'tw2.jquery' : 'ralphbean',
-    'tw2.sqla' : 'ralphbean',
-    'tw2.devtools' : 'ralphbean',
-    'tw2.jqplugins.elfinder' : 'josephtate',
-    'tw2.jqplugins.elrte' : 'josephtate',
+    'paj' : [
+        'tw2core',
+        'tw2devtools',
+        'tw2dynforms',
+        'tw2forms'
+        'tw2.sqla',
+        'tw2yui',
+    ],
+    'ralphbean' : [
+        'tw2core',
+        'tw2.forms',
+        'tw2.jquery',
+        'tw2.sqla',
+        'tw2.devtools',
+    ],
+    'josephtate' : [
+        'tw2.jqplugins.elfinder',
+        'tw2.jqplugins.elrte',
+        'tw2.upload',
+    ],
+    'toscawidgets' : [
+        'tw2.core',
+        'tw2.forms',
+        'tw2.jqplugins.ui',
+        'tw2.jquery',
+        'tw2.jwysiwyg',
+        'tw2.recaptcha',
+    ],
 }
 github_repos = {
-    'tw2.jit' : 'ralphbean',
-
-    'tw2.jqplugins.cookies' : 'ralphbean',
-    'tw2.jqplugins.dynatree' : 'ralphbean',
-    'tw2.jqplugins.fg' : 'ralphbean',
-    'tw2.jqplugins.flot' : 'ralphbean',
-    'tw2.jqplugins.jqgrid' : 'ralphbean',
-    'tw2.jqplugins.jqplot' : 'ralphbean',
-    'tw2.jqplugins.portlets' : 'ralphbean',
-    'tw2.jqplugins.ui' : 'ralphbean',
-
-    'tw2.polymaps' : 'ralphbean',
-    'tw2.tipster' : 'ralphbean',
-
-    'tw2.protovis.core' : 'ralphbean',
-    'tw2.protovis.conventional' : 'ralphbean',
-    'tw2.protovis.custom' : 'ralphbean',
-    'tw2.protovis.hierarchies' : 'ralphbean',
-    'tw2.etc' : 'ralphbean',
-    'tw2.excanvas' : 'ralphbean',
+    'decause' : [
+        'tw2.huBarcode',
+    ],
+    'ralphbean' : [
+        'tw2.etc',
+        'tw2.excanvas',
+        'tw2.jit',
+        'tw2.jqplugins.cookies',
+        'tw2.jqplugins.dynatree',
+        'tw2.jqplugins.fg',
+        'tw2.jqplugins.flot',
+        'tw2.jqplugins.jqgrid',
+        'tw2.jqplugins.jqplot',
+        'tw2.jqplugins.portlets',
+        'tw2.jqplugins.ui',
+        'tw2.polymaps',
+        'tw2.protovis.core',
+        'tw2.protovis.conventional',
+        'tw2.protovis.custom',
+        'tw2.protovis.hierarchies',
+        'tw2.slideymenu',
+        'tw2.tipster',
+    ],
 }
 
-# TODO -- just having tw2.forms here now for testing purposes
+# This is for repos hosted neither on github nor bitbucket.  One-offs.
 custom_repos = {
-    'tw2.forms' : {
-        'url' : 'https://bitbucket.org/toscawidgets/tw2.forms',
-        'vcs' : 'mercurial',
-        'clone_url' : 'https://bitbucket.org/toscawidgets/tw2.forms',
-    },
-    'tw2.core' : {
-        'url' : 'https://bitbucket.org/toscawidgets/tw2.core',
-        'vcs' : 'mercurial',
-        'clone_url' : 'https://bitbucket.org/toscawidgets/tw2.core',
-    }
+# Syntax should look something like:
+#    'tw2.forms' : [
+#        {
+#            'url' : 'https://bitbucket.org/toscawidgets/tw2.forms',
+#            'vcs' : 'mercurial',
+#            'clone_url' : 'https://bitbucket.org/toscawidgets/tw2.forms',
+#        }
+#    ],
 }
 
 class Repo(object):
@@ -76,19 +97,25 @@ class Repo(object):
     def gather_results(self):
         """ Should only be called after _run-tests.sh is called. """
         # Not very robust.
-        with open('htmlcov/results-%s' % repr(self)) as f:
-            lines = f.readlines()
-            try:
-                self.tests = lines[-3].strip()
-            except IndexError as e:
-                # Just for debugging this script.  This should never happen.
-                self.tests = " <br/> ".join(lines)
+        try:
+            with open('htmlcov/results-%s' % repr(self)) as f:
+                lines = f.readlines()
+                try:
+                    self.tests = lines[-3].strip()
+                except IndexError as e:
+                    # Just for debugging this script.  This should never happen.
+                    self.tests = " <br/> ".join(lines)
+        except IOError as e:
+            pass
 
         with open('htmlcov/summary.data') as f:
             lines = f.readlines()
 
         for line in lines:
-            name, coverage = line.strip().split()
+            try:
+                name, coverage = line.strip().split()
+            except ValueError as e:
+                continue
             if name == repr(self):
                 self.coverage = coverage
 
@@ -131,35 +158,42 @@ class Repo(object):
 
 repos = []
 
-for k, v in bitbucket_repos.iteritems():
-    repos.append(Repo(
-        service='bitbucket',
-        project=k,
-        account=v,
-        url='http://bitbucket.org/{v}/{k}'.format(v=v,k=k),
-        vcs='mercurial',
-        clone_url='http://bitbucket.org/{v}/{k}'.format(v=v,k=k),
-    ))
+for username, projects in bitbucket_repos.iteritems():
+    for project in projects:
+        repos.append(Repo(
+            service='bitbucket',
+            project=project,
+            account=username,
+            url='http://bitbucket.org/{v}/{k}'.format(
+                v=username, k=project),
+            vcs='mercurial',
+            clone_url='http://bitbucket.org/{v}/{k}'.format(
+                v=username, k=project),
+        ))
 
-for k, v in github_repos.iteritems():
-    repos.append(Repo(
-        service='github',
-        project=k,
-        account=v,
-        url='http://github.com/{v}/{k}'.format(v=v,k=k),
-        vcs='git',
-        clone_url='https://github.com/{v}/{k}.git'.format(v=v,k=k)
-    ))
+for username, projects in github_repos.iteritems():
+    for project in projects:
+        repos.append(Repo(
+            service='github',
+            project=project,
+            account=username,
+            url='http://github.com/{v}/{k}'.format(
+                v=username, k=project),
+            vcs='git',
+            clone_url='https://github.com/{v}/{k}.git'.format(
+                v=username, k=project),
+        ))
 
-for k, v in custom_repos.iteritems():
-    repos.append(Repo(
-        service=NONE,
-        project=k,
-        account=NONE,
-        url=v['url'],
-        vcs=v['vcs'],
-        clone_url=v['clone_url'],
-    ))
+for project, paramsets in custom_repos.iteritems():
+    for paramset in paramsets:
+        repos.append(Repo(
+            service=NONE,
+            project=project,
+            account=NONE,
+            url=paramset['url'],
+            vcs=paramset['vcs'],
+            clone_url=paramset['clone_url'],
+        ))
 
 repos.sort(lambda r1, r2: cmp(r1.name, r2.name))
 
