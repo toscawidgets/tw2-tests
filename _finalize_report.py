@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import mako.template
-
+from datetime import datetime
 from _repolist import repos
 
 # API Design ANTI-PATTERN.  Don't look at this.  :)
@@ -45,10 +45,10 @@ tmpl_str = """
 <div class="push"></div>
 </div>
     <div class="footer">
-    <p>A project of <a href="http://threebean.org">[three]Bean.org</a>.  Tests are
-    run nightly.</p>
+    <p>This is a project of <a href="http://threebean.org">[three]Bean.org</a>.  Tests are
+    run nightly.  Last generated at ${timestamp}.</p>
     <p>
-    If you'd like to see your widget library listed on this page or the<br/>
+    If you'd like to see your widget library listed on this page or the
     <a href="http://tw2-demos.threebean.org">demo page</a>, please email the
     <a href="http://groups.google.com/group/toscawidgets-discuss">toscawidgets-discuss</a> mailing list.</p>
     </div>
@@ -66,7 +66,8 @@ if __name__ == '__main__':
     for r in repos:
         r.gather_results()
     template = mako.template.Template(tmpl_str)
-    output = template.render(repos=repos, sparkwidget=page.commits)
+    output = template.render(repos=repos, sparkwidget=page.commits,
+                             timestamp=datetime.now().strftime('%F %T'))
     with open('htmlcov/index.html', 'w') as f:
         f.write(output)
 
