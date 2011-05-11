@@ -112,7 +112,7 @@ class Repo(object):
     @property
     def test_command(self):
         commands = [
-            "cd %s" % repr(self),
+            "pushd %s" % repr(self),
             "rmvirtualenv %s-venv" % repr(self),
             "mkvirtualenv --no-site-packages %s-venv" % repr(self),
             "pip install coverage",
@@ -124,7 +124,7 @@ class Repo(object):
             "coverage html",
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
-            "cd -",
+            "popd",
             "echo \"%s $COV\" >> htmlcov/summary.data" % repr(self),
         ]
         return " ;\n".join(commands)
