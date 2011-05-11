@@ -59,6 +59,7 @@ github_repos = {
         'tw2.protovis.conventional',
         'tw2.protovis.custom',
         'tw2.protovis.hierarchies',
+        'tw2.rrd',
         'tw2.slideymenu',
         'tw2.tipster',
     ],
