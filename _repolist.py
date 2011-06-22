@@ -13,7 +13,7 @@ bitbucket_repos = {
         'tw2core',
         'tw2devtools',
         'tw2dynforms',
-        'tw2forms'
+        'tw2forms',
         'tw2.sqla',
         'tw2yui',
     ],
