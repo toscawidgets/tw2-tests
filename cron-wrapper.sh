@@ -1,7 +1,13 @@
 #!/bin/bash
 
-source ~/.bashrc
+source /home/threebean/.bashrc
 
-pushd ~/tw2-tests
-./generate-report.sh > ~/tw2-tests/nightly.log 2>&1
+LOG=/home/threebean/tw2-tests/nightly.log
+pushd /home/threebean/tw2-tests
+echo "************************"  > $LOG
+echo "Starting up at   $(date)" >> $LOG
+echo $(pwd) >> $LOG
+/bin/bash generate-report.sh >> $LOG 2>&1
+echo "Finishing up at  $(date)" >> $LOG
+echo "************************" >> $LOG
 pushd -
