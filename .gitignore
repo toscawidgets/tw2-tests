@@ -8,3 +8,4 @@ _run-tests.sh
 htmlcov/summary.data
 build
 nightly.log
+.coverage
