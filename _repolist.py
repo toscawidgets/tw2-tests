@@ -149,7 +149,7 @@ class Repo(object):
             "coverage run --source=tw2/ setup.py test",
             "COV=$(coverage report | tail -1 | awk ' { print $4 } ')",
             "python setup.py test -q 2>> ../htmlcov/results-%s" % repr(self),
-            "coverage html",
+            "coverage html --omit=*.kid --omit=*samples*",
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
             "popd",
