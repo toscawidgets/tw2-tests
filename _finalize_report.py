@@ -38,7 +38,7 @@ tmpl_str = """
     <td>${r.service}</td>
     <td>${r.account}</td>
     <td><a href="htmlcov-${repr(r)}/index.html">${r.coverage}</a></td>
-    <td>${r.tests}</td>
+    <td><a href="results-${repr(r)}">${r.tests}</a></td>
 </tr>
 % endfor
 </table>
