@@ -17,3 +17,5 @@ rm -rf ~/webapps/tw2_tests/*
 cp htmlcov/index.html ~/webapps/tw2_tests/.
 cp htmlcov/threebean.css ~/webapps/tw2_tests/.
 mv htmlcov/htmlcov* ~/webapps/tw2_tests/.
+mv htmlcov/results* ~/webapps/tw2_tests/.
+find ~/webapps/tw2_tests/results* -exec mv {} {}.txt \;
