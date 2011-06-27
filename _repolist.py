@@ -24,6 +24,9 @@ bitbucket_repos = {
         'tw2.sqla',
         'tw2.devtools',
     ],
+    'tbatterii' : [
+        'tw2core',
+    ],
     'josephtate' : [
         'tw2.jqplugins.elfinder',
         'tw2.jqplugins.elrte',
