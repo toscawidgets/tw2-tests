@@ -143,7 +143,8 @@ class Repo(object):
     @property
     def test_command(self):
         commands = [
-            "pushd %s" % repr(self),
+            "TW2_TEST_ORIGINAL_DIR=$(pwd)"
+            "cd %s" % repr(self),
             "rmvirtualenv %s-venv" % repr(self),
             "mkvirtualenv --no-site-packages %s-venv" % repr(self),
             "python setup.py test -q 2>> ../htmlcov/results-%s" % repr(self),
@@ -153,7 +154,7 @@ class Repo(object):
             "coverage html --omit=*.kid --omit=*samples*",
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
-            "popd",
+            "cd $TW2_TEST_ORIGINAL_DIR",
             "echo \"%s $COV\" >> htmlcov/summary.data" % repr(self),
         ]
         return " ;\n".join(commands)
