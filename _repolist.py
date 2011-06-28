@@ -45,6 +45,13 @@ github_repos = {
     'decause' : [
         'tw2.huBarcode',
     ],
+    'gregjurman' : [
+        'tw2.jqplugins.ui',
+        'tw2.timebar',
+        'tw2.qrcode',
+        'tw2.jquery',
+        'tw2.jit',
+    ],
     'ralphbean' : [
         'tw2.etc',
         'tw2.excanvas',
