@@ -157,7 +157,7 @@ class Repo(object):
             "python setup.py test -q 2>> ../htmlcov/results-%s" % repr(self),
             "pip install coverage",
             "coverage run --source=tw2/ setup.py test",
-            "COV=$(coverage report | tail -1 | awk ' { print $4 } ')",
+            "COV=$(coverage report --omit=*.kid --omit=*samples* | tail -1 | awk ' { print $4 } ')",
             "coverage html --omit=*.kid --omit=*samples*",
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
