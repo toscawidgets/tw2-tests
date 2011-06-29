@@ -150,7 +150,7 @@ class Repo(object):
     @property
     def test_command(self):
         commands = [
-            "TW2_TEST_ORIGINAL_DIR=$(pwd)"
+            "cd /home/threebean/tw2-tests",
             "cd %s" % repr(self),
             "rmvirtualenv %s-venv" % repr(self),
             "mkvirtualenv --no-site-packages %s-venv" % repr(self),
@@ -161,7 +161,7 @@ class Repo(object):
             "coverage html --omit=*.kid --omit=*samples*",
             "mv htmlcov ../htmlcov/htmlcov-%s" % repr(self),
             "deactivate",
-            "cd $TW2_TEST_ORIGINAL_DIR",
+            "cd /home/threebean/tw2-tests",
             "echo \"%s $COV\" >> htmlcov/summary.data" % repr(self),
         ]
         return " ;\n".join(commands)
@@ -251,7 +251,7 @@ def test():
 
 
 if __name__ == '__main__':
-    print "#!/bin/bash -vx"
+    print "#!/bin/bash"
     print "source ~/.bashrc"
     print
 
