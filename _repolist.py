@@ -111,11 +111,14 @@ class Repo(object):
         try:
             with open('htmlcov/results-%s' % repr(self)) as f:
                 lines = f.readlines()
+                maybe_lines = [l for l in lines if 'Ran' in l]
+                self.tests = " <br/> ".join(lines)
                 try:
                     self.tests = lines[-3].strip()
+                    self.tests = maybe_lines[0]
                 except IndexError as e:
                     # Just for debugging this script.  This should never happen.
-                    self.tests = " <br/> ".join(lines)
+                    pass
         except IOError as e:
             pass
 
@@ -152,8 +155,9 @@ class Repo(object):
         commands = [
             "cd /home/threebean/tw2-tests",
             "cd %s" % repr(self),
-            "rmvirtualenv %s-venv" % repr(self),
-            "mkvirtualenv --no-site-packages %s-venv" % repr(self),
+            "rm -rf ~/.virtualenvs/%s-venv" % repr(self),
+            "virtualenv --no-site-packages ~/.virtualenvs/%s-venv" % repr(self),
+            "source ~/.virtualenvs/%s-venv/bin/activate" % repr(self),
             "python setup.py test -q 2>> ../htmlcov/results-%s" % repr(self),
             "pip install coverage",
             "coverage run --source=tw2/ setup.py test",

@@ -1,7 +1,11 @@
 #!/bin/bash -e
 source ~/.bashrc
 
-workon finalize_report || mkvirtualenv --no-site-packages finalize_report
+if [ ! -f ~/finalize_report/bin/activate ] ; then
+    virtualenv --no-site-packages ~/finalize_report
+fi
+source ~/finalize_report/bin/activate
+
 pip install mako genshi mercurial formencode
 
 ./_repolist.py > _run-tests.sh
